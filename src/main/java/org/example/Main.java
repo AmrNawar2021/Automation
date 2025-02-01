@@ -25,7 +25,7 @@ public class Main {
         scheduler.scheduleAtFixedRate(() -> {
             System.out.println("🔄 Running Selenium Automation Task...");
             checkTasks(); // Run the automation
-        }, 0, 1, TimeUnit.HOURS);
+        }, 0, 10, TimeUnit.MINUTES);
     }
 
     public static void waitUntilFullyLoad(WebDriver driver) {
