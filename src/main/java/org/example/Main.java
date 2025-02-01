@@ -1,4 +1,5 @@
 package org.example;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,14 +19,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
 public class Main {
     public static void main(String[] args) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             System.out.println("🔄 Running Selenium Automation Task...");
             checkTasks(); // Run the automation
-        }, 0, 10, TimeUnit.MINUTES);
+        }, 0, 10, TimeUnit.MINUTES); // Adjust time interval as needed
     }
 
     public static void waitUntilFullyLoad(WebDriver driver) {
@@ -33,13 +33,11 @@ public class Main {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(webDriver -> ((JavascriptExecutor) webDriver)
                         .executeScript("return document.readyState").equals("complete"));
-
     }
-    public static void checkTasks() {
 
+    public static void checkTasks() {
         // Automatically set up ChromeDriver
-        //WebDriverManager.chromedriver().setup();
-        WebDriverManager.chromedriver().driverVersion("132.0.6834.159").setup();
+        WebDriverManager.chromedriver().driverVersion("132.0.6834.159").setup(); // Specify driver version
 
         // Set Chrome options
         ChromeOptions options = new ChromeOptions();
@@ -52,54 +50,49 @@ public class Main {
         WebDriver driver = new ChromeDriver(options);
 
         try {
-            // 4. Open the login page
+            // Open the login page
             driver.get("https://app.outlier.ai/en/expert/login"); // Replace with actual login URL
+            waitUntilFullyLoad(driver); // Wait for the page to load
 
-            waitUntilFullyLoad(driver);
-
-            // 6. Locate the username and password fields, and set the credentials
-            WebElement usernameField = driver.findElement(By.id("email")); // Replace with the actual ID or name for username input field
-            WebElement passwordField = driver.findElement(By.id("password")); // Replace with the actual ID or name for password input field
+            // Locate the username and password fields, and set the credentials
+            WebElement usernameField = driver.findElement(By.id("email"));
+            WebElement passwordField = driver.findElement(By.id("password"));
 
             usernameField.sendKeys("amrfawzi182000@gmail.com"); // Username
             passwordField.sendKeys("outlier@182000"); // Password
 
-            // 7. Locate the login button and click it
-            WebElement loginButton = driver.findElement(By.xpath("//button[@class='scaleui inline-flex items-center rounded border-0 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all px-4 h-9 text-sm w-full justify-center text-neutral-0 bg-primary-400 hover:bg-primary-500 focus:ring-primary-400 mt-4']")); // Replace with actual XPath for the login button
+            // Locate the login button and click it
+            WebElement loginButton = driver.findElement(By.xpath("//button[@class='scaleui inline-flex items-center rounded border-0 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all px-4 h-9 text-sm w-full justify-center text-neutral-0 bg-primary-400 hover:bg-primary-500 focus:ring-primary-400 mt-4']"));
             loginButton.click();
 
+            waitUntilFullyLoad(driver); // Wait for page load after login
+
+            // Navigate to the dashboard and marketplace
+            driver.get("https://app.outlier.ai/dashboard?verificationredirect=%2Fexpert");
             waitUntilFullyLoad(driver);
 
-            // 9. Optionally, handle other logic (like verifying successful login, etc.)
-            System.out.println("Login attempt completed.");
-
+            driver.get("https://app.outlier.ai/marketplace");
             waitUntilFullyLoad(driver);
 
-            driver.get("https://app.outlier.ai/dashboard?verificationredirect=%2Fexpert"); // Replace with actual URL
+            Thread.sleep(10000); // Wait for page elements to load
 
-
-            waitUntilFullyLoad(driver);
-            driver.get("https://app.outlier.ai/marketplace"); // Replace with actual URL
-
-            waitUntilFullyLoad(driver);
-            Thread.sleep(10000);
-            // 6. Check if the "no projects" message exists
+            // Check if the "no projects" message exists
             List<WebElement> noProjectsMessage = driver.findElements(By.xpath("//div[contains(text(), 'There are no available projects that match your qualifications at this time.')]"));
             if (!noProjectsMessage.isEmpty()) {
                 System.out.println("No projects available. Closing browser...");
-                System.out.println("on "+new Date());
-                Thread.sleep(10000);
+                System.out.println("on " + new Date());
+                Thread.sleep(10000); // Allow some time before quitting
                 driver.quit(); // Close browser if message exists
             } else {
-                System.out.println("Congrats "+new Date());
-                sendMail("merooonawar@gmail.com","nabe iojh sdlj jkgg","amrfawzi182000@gmail.com");
-                Thread.sleep(10000);
-                driver.quit(); // Close browser if message exists
+                System.out.println("Congrats " + new Date());
+                sendMail("merooonawar@gmail.com", "nabe iojh sdlj jkgg", "amrfawzi182000@gmail.com");
+                Thread.sleep(10000); // Wait before closing
+                driver.quit(); // Close browser if projects are available
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // 10. Ensure browser closes in case of an exception
+            // Ensure browser closes in case of an exception
             driver.quit();
         }
     }
@@ -131,7 +124,7 @@ public class Main {
             message.setFrom(new InternetAddress(emailAddress)); // Sender's email address
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to)); // Recipient's email address
             message.setSubject("Send Email from Amr outlier"); // Subject
-            message.setText("Congratulations, you now have outlier's tasks please check now"); // Body content
+            message.setText("Congratulations, you now have outlier's tasks. Please check now!"); // Body content
 
             // Send the message
             Transport.send(message);
