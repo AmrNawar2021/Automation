@@ -1,4 +1,5 @@
 package org.example;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -36,14 +37,18 @@ public class Main {
 
     }
     public static void checkTasks() {
-        // 1. Set up ChromeDriver path
-        System.setProperty("webdriver.chrome.driver", "D:\\java\\chromedriver-win64\\chromedriver.exe"); // Replace with your actual path
 
-        // 2. Set Chrome options (to use existing session)
+        // Automatically set up ChromeDriver
+        WebDriverManager.chromedriver().setup();
+
+        // Set Chrome options
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized"); // Start maximized
+        options.addArguments("--headless"); // Run in headless mode for GitHub Actions
+        options.addArguments("--no-sandbox"); // Required for GitHub Actions
+        options.addArguments("--disable-dev-shm-usage"); // Required for GitHub Actions
 
-        // 3. Initialize WebDriver
+        // Initialize WebDriver
         WebDriver driver = new ChromeDriver(options);
 
         try {
