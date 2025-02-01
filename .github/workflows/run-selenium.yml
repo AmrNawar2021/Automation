@@ -46,5 +46,5 @@ jobs:
       env:
         CHROME_BIN: "/usr/bin/google-chrome"
       run: |
-        mvn clean compile  # Ensure a clean build
+        
         mvn exec:java -Dexec.mainClass="org.example.Main"  # Run your main class
