@@ -15,8 +15,43 @@
     </properties>
 
     <dependencies>
-        <!-- Add your dependencies here, such as Selenium, JavaMail, etc. -->
-    </dependencies>
+    <!-- Selenium WebDriver dependencies -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.6.0</version>
+    </dependency>
+
+    <!-- WebDriverManager dependency -->
+    <dependency>
+        <groupId>io.github.bonigarcia</groupId>
+        <artifactId>webdrivermanager</artifactId>
+        <version>5.3.0</version>
+    </dependency>
+
+    <!-- JavaMail API for email sending -->
+    <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>javax.mail-api</artifactId>
+        <version>1.6.2</version>
+    </dependency>
+
+    <!-- For javax.mail: You may need to add an implementation like the following -->
+    <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>1.6.2</version>
+    </dependency>
+
+    <!-- JUnit (optional, if you are testing) -->
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.7.2</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+
 
     <build>
         <plugins>
