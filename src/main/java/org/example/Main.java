@@ -21,13 +21,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        // ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        // scheduler.scheduleAtFixedRate(() -> {
-        //     System.out.println("🔄 Running Selenium Automation Task...");
-        //     checkTasks(); // Run the automation
-        // }, 0, 1, TimeUnit.HOURS);
-        checkTasks();
-
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            System.out.println("🔄 Running Selenium Automation Task...");
+            checkTasks(); // Run the automation
+        }, 0, 1, TimeUnit.HOURS);
     }
 
     public static void waitUntilFullyLoad(WebDriver driver) {
