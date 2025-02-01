@@ -40,7 +40,8 @@ public class Main {
     public static void checkTasks() {
 
         // Automatically set up ChromeDriver
-        WebDriverManager.chromedriver().setup();
+        //WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().driverVersion("132.0.6834.159").setup();
 
         // Set Chrome options
         ChromeOptions options = new ChromeOptions();
