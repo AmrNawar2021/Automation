@@ -3,10 +3,11 @@ name: Run Selenium Automation
 on:
   schedule:
     - cron: '0 * * * *'  # Runs every hour at the start of the hour
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   run-selenium:
-    runs-on: ubuntu-latest  # Use a free GitHub Actions runner
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -18,15 +19,31 @@ jobs:
         java-version: '21'  # Use Java 21 (as specified in your pom.xml)
         distribution: 'temurin'  # Use Eclipse Temurin JDK
 
-    - name: Install Chrome
+    - name: Install Google Chrome
       run: |
         sudo apt-get update
         sudo apt-get install -y wget unzip
         wget -N https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-        
+        echo "✅ Chrome Installed"
 
-    - name: Run Selenium Automation
+    - name: Install ChromeDriver
       run: |
-        mvn compile  # Compile your Java code
+        CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+        wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+        echo "✅ ChromeDriver Installed"
+
+    - name: Verify Chrome & ChromeDriver Versions
+      run: |
+        google-chrome --version
+        chromedriver --version
+
+    - name: Build and Run Selenium Automation
+      env:
+        CHROME_BIN: "/usr/bin/google-chrome"
+      run: |
+        mvn clean compile  # Ensure a clean build
         mvn exec:java -Dexec.mainClass="org.example.Main"  # Run your main class
